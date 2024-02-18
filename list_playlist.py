@@ -53,3 +53,9 @@ if __name__ == '__main__':
     videos = fetch_all_youtube_videos("PLmFh1W9jg-zYFAtD8qe_0XJwQB9nvUAAN")
     pp = PrettyPrinter()
     pp.pprint(videos)
+    urls = []
+    for item in videos["items"]:
+        video = item['snippet']['resourceId']['videoId']
+        urls.append(f"https://www.youtube.com/watch?v={video}")
+
+    print(urls)
