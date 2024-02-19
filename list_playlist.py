@@ -3,6 +3,8 @@
 from googleapiclient.discovery import build
 import json
 from pprint import PrettyPrinter
+from pytube import YouTube
+import os
 
 api_key=""
 with open("/home/sg/Beginning/video_api_key.json") as jsonFile:
@@ -49,6 +51,15 @@ def fetch_all_youtube_videos(playlistId):
 
     return res
 
+def downloadYouTube(videourl, path):
+
+    yt = YouTube(videourl)
+    yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+    if not os.path.exists(path):
+        os.makedirs(path)
+    yt.download(path)
+
+
 if __name__ == '__main__':
     videos = fetch_all_youtube_videos("PLmFh1W9jg-zYFAtD8qe_0XJwQB9nvUAAN")
     pp = PrettyPrinter()
@@ -58,4 +69,7 @@ if __name__ == '__main__':
         video = item['snippet']['resourceId']['videoId']
         urls.append(f"https://www.youtube.com/watch?v={video}")
 
-    print(urls)
+    # print(urls)
+    path = '/home/sg/Beginning/youtube_videos'
+
+    downloadYouTube(urls[0],path)
