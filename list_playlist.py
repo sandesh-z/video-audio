@@ -59,11 +59,22 @@ def downloadYouTube(videourl, path):
         os.makedirs(path)
     yt.download(path)
 
+def downloadYouTubeAudio(videourl, path):
+
+    yt = YouTube(videourl)
+    video = yt.streams.filter(only_audio=True).first() 
+  
+    output_file = video.download(output_path=path)
+
+    base, ext = os.path.splitext(output_file) 
+    new_file = base + '.mp3'
+    os.rename(output_file, new_file) 
+    print(yt.title + " has been successfully downloaded.")
 
 if __name__ == '__main__':
     videos = fetch_all_youtube_videos("PLmFh1W9jg-zYFAtD8qe_0XJwQB9nvUAAN")
     pp = PrettyPrinter()
-    pp.pprint(videos)
+    # pp.pprint(videos)
     urls = []
     for item in videos["items"]:
         video = item['snippet']['resourceId']['videoId']
@@ -72,4 +83,8 @@ if __name__ == '__main__':
     # print(urls)
     path = '/home/sg/Beginning/youtube_videos'
 
-    downloadYouTube(urls[0],path)
+    for item in urls:
+        try:
+            downloadYouTubeAudio(item,path)
+        except:
+            pass    
